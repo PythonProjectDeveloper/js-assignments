@@ -201,7 +201,21 @@ function extractEmails(str) {
  *
  */
 function getRectangleString(width, height) {
-    throw new Error('Not implemented');
+    const innerWidth = width - 2;
+    const innerHeight = height - 2;
+    const horizontalBorder = '─';
+    const verticalBorder = '│';
+    const topLeftCorner = '┌';
+    const topRightCorner = '┐';
+    const bottomLeftCorner = '└';
+    const bottomRightCorner = '┘';
+    const fill = ' ';
+
+    let rectangle = topLeftCorner + horizontalBorder.repeat(innerWidth) + topRightCorner + '\n';
+    rectangle += (verticalBorder + fill.repeat(innerWidth) + verticalBorder + '\n').repeat(innerHeight);
+    rectangle += bottomLeftCorner + horizontalBorder.repeat(innerWidth) + bottomRightCorner + '\n';
+
+    return rectangle;
 }
 
 
