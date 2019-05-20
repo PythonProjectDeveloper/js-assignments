@@ -235,7 +235,9 @@ function getRectangleString(width, height) {
  *
  */
 function encodeToRot13(str) {
-    throw new Error('Not implemented');
+    return str.replace(/([a-m])|([n-z])/gi, (char, leftMatch) => {
+        return String.fromCharCode(char.charCodeAt(0)+(leftMatch ? 13 : -13));
+    });
 }
 
 /**
