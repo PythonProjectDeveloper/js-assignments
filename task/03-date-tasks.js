@@ -96,7 +96,8 @@ function timeSpanToString(startDate, endDate) {
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
 function angleBetweenClockHands(date) {
-    throw new Error('Not implemented');
+   const radius = Math.abs(date.getUTCHours() % 12 * 60 - date.getUTCMinutes() * 11) * Math.PI / 360;
+   return radius > Math.PI ? radius - Math.PI : radius;
 }
 
 
