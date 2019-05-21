@@ -53,8 +53,8 @@ function getCicleCircumference(radius) {
  *  10, 0  => 5
  *  -3, 3  => 0
  */
-function getAverage(...args) {
-    return args.reduce((acc, val) => acc += val / 2, 0);
+function getAverage(value1, value2) {
+    return value1 / 2 + value2 / 2;
 }
 
 /**
