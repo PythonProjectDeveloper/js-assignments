@@ -477,7 +477,7 @@ function getIntervalArray(start, end) {
  *   [ 1, 1, 2, 2, 3, 3, 4, 4] => [ 1, 2, 3, 4]
  */
 function distinct(arr) {
-   return arr.reduce((acc, val) => acc.includes(val) ? acc : acc.concat(val), []);
+   return arr.filter((val, idx, a) => idx === a.indexOf(val));
 }
 
 /**
@@ -511,7 +511,13 @@ function distinct(arr) {
  *   }
  */
 function group(array, keySelector, valueSelector) {
-   throw new Error('Not implemented');
+   return array.reduce((acc, obj) => {
+      const key = keySelector(obj);
+      const value = valueSelector(obj);
+      const mapValue = acc.has(key) ? acc.get(key).concat(value) : Array(value);
+      acc.set(key, mapValue);
+      return acc;
+   }, new Map());
 }
 
 
