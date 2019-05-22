@@ -368,7 +368,7 @@ function timespanToHumanString(startDate, endDate) {
  *    365, 10 => '365'
  */
 function toNaryString(num, n) {
-    var result = '';
+    let result = '';
     while(num !== 0) {
       	result = (num % n) + result;
       	num = Math.floor(num / n);
@@ -448,7 +448,28 @@ function getMatrixProduct(m1, m2) {
  *
  */
 function evaluateTicTacToePosition(position) {
-    throw new Error('Not implemented');
+    const combinations = [
+      [0,0,0,1,0,2],
+      [1,0,1,1,1,2],
+      [2,0,2,1,2,2],
+      [0,0,1,0,2,0],
+      [0,1,1,1,2,1],
+      [0,2,1,2,2,2],
+      [0,0,1,1,2,2],
+      [0,2,1,1,2,0]
+    ];
+
+    for (let i = 0; i < 8; i += 1) {
+        const line = combinations[i];
+        const first = position[line[0]][line[1]];
+        const second = position[line[2]][line[3]];
+        const third = position[line[4]][line[5]];
+        if (first !== undefined && first === second && second === third) {
+               return position[line[0]][line[1]];
+        }
+    }
+
+    return undefined;
 }
 
 
