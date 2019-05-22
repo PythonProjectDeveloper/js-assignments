@@ -179,8 +179,7 @@ function isInsideCircle(circle, point) {
 function findFirstSingleChar(str) {
     const symbols = new Map();
     
-    for (let i = 0; i < str.length; i += 1) {
-        const symbol = str[i];
+    for (let symbol of str) {
         if (symbols.has(symbol)) symbols.set(symbol, symbols.get(symbol) + 1);
         else symbols.set(symbol, 1);
     }
