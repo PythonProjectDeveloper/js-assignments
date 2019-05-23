@@ -364,7 +364,43 @@ function isBracketsBalanced(str) {
  *
  */
 function timespanToHumanString(startDate, endDate) {
-    throw new Error('Not implemented');
+    function Time() {
+        this.second = 1000;
+        this.minut = this.second * 60;
+        this.hour = this.minut * 60;
+        this.day = this.hour * 24;
+        this.month = this.day * 30;
+        this.year = this.month * 12;
+    }
+    function TimeSpan(start, end, message) {
+        this.message = message;
+        this.isInRange = (span) => start < span && span <= end;
+    } 
+    function round(digit) {
+        return (digit - Math.floor(digit) > 0.5) ? Math.round(digit) : Math.floor(digit);
+    }
+    const time = new Time();
+    const timeSpan = endDate - startDate;
+    const minuts = round(timeSpan / time.minut);
+    const hours = round(timeSpan / time.hour);
+    const days = round(timeSpan / time.day);
+    const months = round(timeSpan / time.month);
+    const years = round(timeSpan / time.year);
+    const timesQueue = [
+        new TimeSpan(0, 45 * time.second, 'a few seconds ago'),
+        new TimeSpan(45 * time.second, 90 * time.second, 'a minute ago'),
+        new TimeSpan(90 * time.second, 45 * time.minut, `${minuts} minutes ago`),
+        new TimeSpan(45 * time.minut, 90 * time.minut, 'an hour ago'),
+        new TimeSpan(90 * time.minut, 22 * time.hour, `${hours} hours ago`),
+        new TimeSpan(22 * time.hour, 36 * time.hour, 'a day ago'),
+        new TimeSpan(36 * time.hour, 25 * time.day, `${days} days ago`),
+        new TimeSpan(25 * time.day, 45 * time.day, 'a month ago'),
+        new TimeSpan(45 * time.day, 345 * time.day, `${months} months ago`),
+        new TimeSpan(345 * time.day, 545 * time.day, 'a year ago'),
+        new TimeSpan(545 * time.day, Infinity, `${years} years ago`),
+    ];
+   
+    return timesQueue.find((ts) => ts.isInRange(timeSpan)).message;
 }
 
 
