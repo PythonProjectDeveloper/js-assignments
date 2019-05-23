@@ -443,7 +443,13 @@ function getCommonDirectoryPath(pathes) {
  *
  */
 function getMatrixProduct(m1, m2) {
-    throw new Error('Not implemented');
+    return m1.reduce((row, rowVal, rowIdx) => {
+        row[rowIdx] = [];
+        m2[0].forEach((_, columnIdx) => {
+            row[rowIdx][columnIdx] = m2.reduce((sum, val, idx) => sum + rowVal[idx] * val[columnIdx], 0);
+        });
+        return row;
+    }, []);
 }
 
 
