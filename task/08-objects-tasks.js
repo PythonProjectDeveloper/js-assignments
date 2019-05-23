@@ -29,7 +29,7 @@ function Rectangle(width, height) {
 
 Rectangle.prototype.getArea = function() {
     return this.width * this.height;
-}
+};
 
 
 /**
@@ -43,7 +43,7 @@ Rectangle.prototype.getArea = function() {
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
 function getJSON(obj) {
-    throw new Error('Not implemented');
+    return JSON.stringify(obj);
 }
 
 
