@@ -141,11 +141,11 @@ function retry(func, attempts) {
  *
  */
 function logger(func, logFunc) {
-    return (...args) => {
-        const params = JSON.stringify(args).slice(1, -1);
+    return () => {
+        const params = JSON.stringify(Array.from(arguments)).slice(1, -1);
         const sendMessage = s => logFunc(`${func.name}(${params}) ${s}`);
         sendMessage('starts');
-        const result = func(...args);
+        const result = func(...params);
         sendMessage('ends');
 
         return result;
