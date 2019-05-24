@@ -64,8 +64,8 @@ function getPowerFunction(exponent) {
  *   getPolynom(8)     => y = 8
  *   getPolynom()      => null
  */
-function getPolynom(...args) {
-    return (x) => [...args].reverse().reduce((acc, mult, pow) => acc + mult * Math.pow(x, pow), 0);
+function getPolynom() {
+    return (x) => Array.from(arguments).reverse().reduce((acc, mult, pow) => acc + mult * Math.pow(x, pow), 0);
 }
 
 
