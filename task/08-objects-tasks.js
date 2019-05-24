@@ -59,7 +59,7 @@ function getJSON(obj) {
  *
  */
 function fromJSON(proto, json) {
-    return Object.setPrototypeOf(JSON.parse(json),proto);
+    return Object.setPrototypeOf(JSON.parse(json), proto);
 }
 
 
@@ -110,36 +110,195 @@ function fromJSON(proto, json) {
  *
  *  For more examples see unit tests.
  */
+const errors = {
+    countOccur: 'Element, id and pseudo-element should not occur more then one time inside the selector',
+    incorrectSequence: 'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element',
+};
+const constant = {
+    combine: '',
+    idPrefix: '#',
+    classPrefix: '.',
+    attrPrefix: '[',
+    attrPostfix: ']',
+    pseudoClassPrefix: ':',
+    pseudoElementPrefix: '::',
+};
+const selectorSequence = {
+    empty: -1,
+    element: 0,
+    id: 1,
+    class: 2,
+    attr: 3,
+    pseudoClass: 4,
+    pseudoElement: 5,
+}
+
+class BaseNode {
+    stringify() {
+        throw new Error('Not implemented');
+    }
+}
+
+class ElementNode extends BaseNode {
+    constructor() {
+        super()
+        this._id = '';
+        this._element = '';
+        this._classes = new Map();
+        this._attrs = new Map();
+        this._pseudoClasses = new Map();
+        this._pseudoElement = '';
+        this._lastOperation = selectorSequence.empty;
+    }
+
+    element(value) {
+        if (this._element) throw Error(errors.countOccur);
+
+        this.lastOperation = selectorSequence.element;
+        this._element = value;
+
+        return this;
+    }
+
+    id(value) {
+        if (this._id) throw Error(errors.countOccur);
+
+        this.lastOperation = selectorSequence.id;
+        const prefix = constant.idPrefix;
+        this._id = prefix + value;
+
+        return this;
+    }
+
+    class(value) {
+        this.lastOperation = selectorSequence.class;
+        const prefix = constant.classPrefix;
+        this._classes.set(value, prefix + value);
+
+        return this;
+    }
+
+    attr(value) {
+        this.lastOperation = selectorSequence.attr;
+        const prefix = constant.attrPrefix;
+        const postfix = constant.attrPostfix;
+        this._attrs.set(value, prefix + value + postfix);
+
+        return this;
+    }
+
+    pseudoClass(value) {
+        this.lastOperation = selectorSequence.pseudoClass;
+        const prefix = constant.pseudoClassPrefix;
+        this._pseudoClasses.set(value, prefix + value);
+
+        return this;
+    }
+
+    pseudoElement(value) {
+        if (this._pseudoElement) throw Error(errors.countOccur);
+
+        this.lastOperation = selectorSequence.pseudoElement;
+        const prefix = constant.pseudoElementPrefix;
+        this._pseudoElement = prefix + value;
+
+        return this;
+    }
+
+    stringify() {
+        const id = this._id;
+        const element = this._element;
+        const classes = Array.from(this._classes.values()).join('') || '';
+        const attrs = Array.from(this._attrs.values()).join('') || '';
+        const pseudoClasses = Array.from(this._pseudoClasses.values()).join('') || '';
+        const pseudoElement = this._pseudoElement;
+
+        return element + id + classes + attrs + pseudoClasses + pseudoElement;
+    }
+
+    set lastOperation(operation) {
+        if (this._lastOperation > operation) throw Error(errors.incorrectSequence);
+
+        this._lastOperation = operation;
+    }
+}
+
+class CombineNode extends BaseNode {
+    constructor(selector1, combinator, selector2) {
+        super()
+
+        this._left = selector1;
+        this._combinator = combinator;
+        this._right = selector2;
+    }
+
+
+    stringify() {
+        const left = this._left.stringify();
+        const combinator = this._combinator;
+        const right = this._right.stringify();
+
+        return `${left} ${combinator} ${right}`;
+    }
+}
 
 const cssSelectorBuilder = {
 
     element: function(value) {
-        throw new Error('Not implemented');
+        const node = this.checkNode(this);
+
+        node.element(value);
+
+        return node;
     },
 
     id: function(value) {
-        throw new Error('Not implemented');
+        const node = this.checkNode(this);
+
+        node.id(value);
+
+        return node;
     },
 
     class: function(value) {
-        throw new Error('Not implemented');
+        const node = this.checkNode(this);
+
+        node.class(value);
+
+        return node;
     },
 
     attr: function(value) {
-        throw new Error('Not implemented');
+        const node = this.checkNode(this);
+
+        node.attr(value);
+
+        return node;
     },
 
     pseudoClass: function(value) {
-        throw new Error('Not implemented');
+        const node = this.checkNode(this);
+
+        node.pseudoClass(value);
+
+        return node;
     },
 
     pseudoElement: function(value) {
-        throw new Error('Not implemented');
+        const node = this.checkNode(this);
+
+        node.pseudoElement(value);
+
+        return node;
     },
 
     combine: function(selector1, combinator, selector2) {
-        throw new Error('Not implemented');
+        return new CombineNode(selector1, combinator, selector2);
     },
+
+    checkNode: function(obj) {
+        return (obj instanceof BaseNode) ? obj : new ElementNode();
+    }
 };
 
 
