@@ -141,11 +141,12 @@ function retry(func, attempts) {
  *
  */
 function logger(func, logFunc) {
-    return () => {
+    return function() {
         const params = JSON.stringify(Array.from(arguments)).slice(1, -1);
+        console.log(params)
         const sendMessage = s => logFunc(`${func.name}(${params}) ${s}`);
         sendMessage('starts');
-        const result = func(...params);
+        const result = func(...arguments);
         sendMessage('ends');
 
         return result;
@@ -166,7 +167,8 @@ function logger(func, logFunc) {
  *   partialUsingArguments(fn, 'a','b','c')('d') => 'abcd'
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
-function partialUsingArguments(fn, ...args) {
+function partialUsingArguments(fn) {
+    const args = Array.from(arguments).slice(1);
     return function() {
         return fn(...args, ...arguments);
     }
