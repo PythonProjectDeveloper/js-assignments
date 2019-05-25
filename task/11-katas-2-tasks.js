@@ -34,7 +34,29 @@
  *
  */
 function parseBankAccount(bankAccount) {
-    throw new Error('Not implemented');
+    const nums = [
+        ' _ | ||_|',
+        '     |  |', 
+        ' _  _||_ ',
+        ' _  _| _|',
+        '   |_|  |',
+        ' _ |_  _|',
+        ' _ |_ |_|',
+        ' _   |  |',
+        ' _ |_||_|',
+        ' _ |_| _|'
+    ];
+    const result = bankAccount
+        .split('\n')
+        .map((line) => line.split(/(.{3})/).filter(Boolean))
+        .reduce((acc, line) => {
+            line.forEach((subline, idx) => acc[idx] += subline);
+            return acc;
+        }, Array(9).fill(''))
+        .map((num) => nums.indexOf(num))
+        .reduce((acc, num) => (acc * 10) + num);
+
+    return result;
 }
 
 
