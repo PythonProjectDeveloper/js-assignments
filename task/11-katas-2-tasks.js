@@ -85,7 +85,8 @@ function parseBankAccount(bankAccount) {
  *                                                                                                'characters.'
  */
 function* wrapText(text, columns) {
-    throw new Error('Not implemented');
+    const lines =  text.match(new RegExp(`(?!\\s).{1,${columns}}(?=(\\s|$))`, 'g'));
+    for (const line of lines) yield line;
 }
 
 
