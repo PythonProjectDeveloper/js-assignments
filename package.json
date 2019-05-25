@@ -4,7 +4,7 @@
   "description": "JS training tasks",
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "test-debug": "./node_modules/.bin/mocha --debug-brk"
+    "test-debug": "./node_modules/.bin/mocha --inspect-brk"
   },
   "author": "aorgish",
   "license": "MIT",
