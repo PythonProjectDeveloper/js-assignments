@@ -56,7 +56,41 @@ function createCompassPoints() {
  *   'nothing to do' => 'nothing to do'
  */
 function* expandBraces(str) {
-    throw new Error('Not implemented');
+    const PATTERN = new RegExp('({[^{}]*})');
+    const CASH = {};
+    const getMatch = (pattern, str) => {
+        const match = pattern.exec(str);
+        return match ? match[0] : match;
+    };
+    const openBracket = (bracket) => {
+        if (bracket in CASH) return CASH[bracket];
+        const result = bracket.slice(1, -1).split(',');
+        CASH[bracket] = result;
+        return result;
+    };
+    const combine = (line, template, args) => args.map((arg) => line.replace(template, arg));
+    const replaceBracket = (line) => {
+        const bracket = getMatch(PATTERN, line);
+        if (!bracket) return [line];
+
+        const args = openBracket(bracket);
+        const combinations = combine(line, bracket, args);
+
+        return combinations;
+    };
+    const findBracets = (str) => {
+        let combinations = [str];
+        let flag = true;
+        while(flag) {
+            combinations = combinations.map((comb) => replaceBracket(comb));
+            flag = combinations.every((comb) => comb.length !== 1);
+            combinations = combinations.reduce((acc, comb) => acc.concat(...comb), []); // combinations = combinations.flat();
+        }
+
+        return combinations;
+    };
+    
+    yield* new Set(findBracets(str));
 }
 
 
