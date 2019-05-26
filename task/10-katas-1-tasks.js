@@ -17,8 +17,25 @@
  *  ]
  */
 function createCompassPoints() {
-    throw new Error('Not implemented');
-    var sides = ['N','E','S','W'];  // use array of cardinal directions only!
+    const sides = ['N','E','S','W'];  // use array of cardinal directions only!
+    const getCommonPoint = (mainPoint, secondaryPoint) => `${mainPoint}${secondaryPoint}`;
+    const getSmallPoint = (mainPoint, secondaryPoint) => `${mainPoint}b${secondaryPoint.replace(new RegExp(mainPoint, 'g'), '')}`;
+    const getDirection = (points, startIdx, endIdx, getPoint) => {
+        const start = points[startIdx];
+        const end = points[endIdx % points.length];
+        const newPoint = startIdx % 2 ? getPoint(end, start) : getPoint(start, end);
+
+        return newPoint;
+    };
+    const addPoints = (points, getPoint) => {
+        return points.reduce((acc, dir, idx) => acc.concat(dir, getDirection(points, idx, idx + 1, getPoint)), []);
+    }
+    const secondPointLevel = addPoints(sides, getCommonPoint);
+    const thirdPointLevel = addPoints(secondPointLevel, getCommonPoint);
+    const fourthPointLevel = addPoints(thirdPointLevel, getSmallPoint);
+    const compassPoints = fourthPointLevel.map((point, idx) => ({ abbreviation : point,   azimuth : idx * 11.250 }))
+
+    return compassPoints;
 }
 
 
