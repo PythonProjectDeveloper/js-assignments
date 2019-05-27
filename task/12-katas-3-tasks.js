@@ -28,7 +28,27 @@
  *   'NULL'      => false 
  */
 function findStringInSnakingPuzzle(puzzle, searchStr) {
-    throw new Error('Not implemented');
+    const lastIndex = searchStr.length - 1;
+    const passedPath = [];
+    const checkAllDirection = (puzzle, searchStr, idY, idX, charIdx) => {
+        const point = `y: ${idY}, x: ${idX}`;
+        let isFind = false;
+        if (passedPath.includes(point)) return isFind;
+        passedPath.push(point)
+        if (puzzle[idY] && puzzle[idY][idX] === searchStr[charIdx]) {
+            if (lastIndex === charIdx) return true;
+            isFind = checkAllDirection(puzzle, searchStr, idY + 1, idX, charIdx + 1)
+                  || checkAllDirection(puzzle, searchStr, idY - 1, idX, charIdx + 1)
+                  || checkAllDirection(puzzle, searchStr, idY, idX + 1, charIdx + 1)
+                  || checkAllDirection(puzzle, searchStr, idY, idX - 1, charIdx + 1);
+        }
+
+        if (!isFind) passedPath.pop(point);
+        
+        return isFind;
+    };
+    puzzle = puzzle.map((line) => line.split(''));
+    return puzzle.some((line, idY) => line.some((_, idX) => checkAllDirection(puzzle, searchStr, idY, idX, 0)));
 }
 
 
