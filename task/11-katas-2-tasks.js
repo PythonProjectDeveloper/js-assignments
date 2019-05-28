@@ -158,7 +158,34 @@ function getPokerHandRank(hand) {
  *    '+-------------+\n'
  */
 function* getFigureRectangles(figure) {
-   throw new Error('Not implemented');
+    const buildRectangle = (width, height) => {
+        const innerWidth = width - 2;
+        const innerHeight = height - 2;
+        const horizontalBorder = '-';
+        const verticalBorder = '|';
+        const corner = '+';
+        const fill = ' ';
+    
+        let rectangle = corner + horizontalBorder.repeat(innerWidth) + corner + '\n';
+        rectangle += (verticalBorder + fill.repeat(innerWidth) + verticalBorder + '\n').repeat(innerHeight);
+        rectangle += corner + horizontalBorder.repeat(innerWidth) + corner + '\n';
+
+        return rectangle;
+    }
+    let height = 0;
+    let widths = [];
+
+    figure = figure.split('\n');
+    for (const line of figure) {
+        height += 1;
+        if (line.includes('+')) {
+            for (const width of widths) yield buildRectangle(width + 2, height);
+
+            height = 1;
+            widths = [];
+        }
+        widths = line.split(/\+|\|/).slice(1, -1).map((innerWidth) => innerWidth.length);
+    }
 }
 
 
