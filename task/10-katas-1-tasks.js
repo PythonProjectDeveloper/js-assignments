@@ -164,7 +164,20 @@ function getZigZagMatrix(n) {
  *
  */
 function canDominoesMakeRow(dominoes) {
-    throw new Error('Not implemented');
+    const addMove = (row, domino, count) => {
+        row[domino] = row[domino] ? row[domino] + count : count;
+    };
+    const gameRow = [];
+    dominoes.forEach((domino) => {
+        const leftSide = domino[0];
+        const rightSide = domino[1];
+        let shift = (leftSide === rightSide) ? -1 : 1;
+        addMove(gameRow, leftSide, shift);
+        addMove(gameRow, rightSide, shift);
+    });
+    
+    const nonPairSide = gameRow.reduce((acc, val) => val < 0 || val % 2 ? acc + 1 : acc, 0);
+    return nonPairSide < 3;
 }
 
 
