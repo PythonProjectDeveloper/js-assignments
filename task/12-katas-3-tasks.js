@@ -33,7 +33,7 @@ function findStringInSnakingPuzzle(puzzle, searchStr) {
     const checkAllDirection = (puzzle, searchStr, idY, idX, charIdx) => {
         const point = `y: ${idY}, x: ${idX}`;
         let isFind = false;
-        if (passedPath.includes(point)) return isFind;
+        if (passedPath.indexOf(point) !== -1) return isFind;
         passedPath.push(point)
         if (puzzle[idY] && puzzle[idY][idX] === searchStr[charIdx]) {
             if (lastIndex === charIdx) return true;
