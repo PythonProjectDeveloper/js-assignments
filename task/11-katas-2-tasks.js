@@ -123,7 +123,43 @@ const PokerRank = {
 }
 
 function getPokerHandRank(hand) {
-    throw new Error('Not implemented');
+    let numbers = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+    hand.some((card) => parseInt(card) === 2) ? numbers.unshift('A') : numbers.push('A');
+    const getNumber = (card) => card.slice(0, -1);
+    const getType = (card) => card.slice(-1);
+    const countEqualNumber = (arr, count) => {
+        return arr.filter((numberCount) => count === numberCount).length;
+    }
+    
+    const countEqualTypes = hand.reduce((acc, card, idx, arr) => {
+        const isEqualType = (idx === 0 || getType(card) === getType(arr[idx - 1]));
+        return isEqualType ? acc + 1 : 0 
+    }, 0);
+
+    const handNumbers = hand.reduce((acc, card) => {
+        const index = numbers.indexOf(getNumber(card));
+        acc[index] = acc[index] ? acc[index] + 1 : 1;
+        return acc;
+    }, []);
+
+    const hasOrder = hand
+                        .map((card) => numbers.indexOf(getNumber(card)))
+                        .sort((a, b) => a - b)
+                        .every((number, idx, arr) => (idx === 0 || number == arr[idx - 1] + 1));
+
+    const hasOneType = countEqualTypes === 5;
+    let pokerRank = PokerRank.HighCard;
+    
+    if (hasOrder && hasOneType) pokerRank = PokerRank.StraightFlush;
+    else if (hasOrder) pokerRank = PokerRank.Straight;
+    else if (hasOneType) pokerRank = PokerRank.Flush;
+    else if (countEqualNumber(handNumbers, 2) && countEqualNumber(handNumbers, 3)) pokerRank = PokerRank.FullHouse;
+    else if (countEqualNumber(handNumbers, 2) === 1) pokerRank = PokerRank.OnePair;
+    else if (countEqualNumber(handNumbers, 2) === 2) pokerRank = PokerRank.TwoPairs;
+    else if (countEqualNumber(handNumbers, 3)) pokerRank = PokerRank.ThreeOfKind;
+    else if (countEqualNumber(handNumbers, 4)) pokerRank = PokerRank.FourOfKind;
+
+    return pokerRank;
 }
 
 
