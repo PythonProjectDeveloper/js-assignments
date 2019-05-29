@@ -139,7 +139,27 @@ function* expandBraces(str) {
  *
  */
 function getZigZagMatrix(n) {
-    throw new Error('Not implemented');
+    const zigZagMatrix = Array.from( Array(n) ).map(x => Array.from( Array(n) ).map(y => 0)); 
+ 
+    let step = 1;
+    let diagonalLength = 0;
+    let counter = -1;
+    const diagonals = [];
+    for (let i = 0, end = n + n - 1; i < end; i++) {
+        if (i === n) step = -1;
+        diagonalLength += step;
+        const diagonal = Array.from(Array(diagonalLength), () => counter += 1);
+        diagonals.push(diagonal);
+    }
+
+    for (let i = 0; i < n; i++) { 
+        for (let j = 0; j < n; j++) {
+            const diagonal = diagonals[i + j];
+            zigZagMatrix[i][j] = (i + j) % 2 ? diagonal.shift() : diagonal.pop();
+        } 
+    } 
+
+    return zigZagMatrix;
 }
 
 
