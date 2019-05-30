@@ -126,16 +126,51 @@ function UrlShortener() {
     this.urlAllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"+
                            "abcdefghijklmnopqrstuvwxyz"+
                            "0123456789-_.~!*'();:@&=+$,/?#[]";
+
+    this.lettertTostrIndex = function(letter) { 
+        const idx = this.urlAllowedChars.indexOf(letter); 
+        const strIndex = idx < 10 ? `0${idx}` : `${idx}`; 
+        return strIndex; 
+    } 
+    
+    
+    this.strIndexToLetter = function(strIndex) { 
+        const idx = parseInt(strIndex); 
+        return this.urlAllowedChars[idx]; 
+    }
 }
 
 UrlShortener.prototype = {
 
     encode: function(url) {
-        throw new Error('Not implemented');
+        const arrURL = Array.from(url); 
+        let strIndexes = arrURL.reduce((acc, char) => acc += this.lettertTostrIndex(char), ''); 
+        let result = ''; 
+
+        if(strIndexes.length % 4) strIndexes += '85'; 
+
+        while(strIndexes.length > 3) { 
+            const block = strIndexes.slice(0, 4); 
+            result += String.fromCharCode(block); 
+            strIndexes = strIndexes.replace(block, ''); 
+        } 
+        return result; 
     },
     
     decode: function(code) {
-        throw new Error('Not implemented');
+        const arrCode = Array.from(code); 
+        const strIndexes = arrCode.reduce((acc, e) => {  
+            let block = e.charCodeAt(0);
+            acc.push(Math.floor(block / 100)); 
+            acc.push(block % 100) 
+            return acc;
+        }, []); 
+        const numsHigh = strIndexes.length - 1; 
+
+        if(strIndexes[numsHigh] === 85) strIndexes.splice(numsHigh, 1); 
+
+        const result = strIndexes.map(idx => this.strIndexToLetter(idx)).join(''); 
+        return result;
     } 
 }
 
