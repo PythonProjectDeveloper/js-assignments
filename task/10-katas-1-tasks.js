@@ -160,6 +160,25 @@ function getZigZagMatrix(n) {
     } 
 
     return zigZagMatrix;
+
+
+    // let result = Array.from( { length: n } ).map(x => Array.from( { length: n } ).map(y => 0)); 
+ 
+ 
+    // for (let i = 0; i < n; i++) { 
+    //     for (let j = 0; j < n; j++) { 
+    //         if ((i + j) < n) { 
+    //             result[i][j] = 0.5 * (i + j + 1) * (i + j + 2) + ((i + j) % 2 == 0 ? -i : -j) - 1; 
+    //         } 
+    //         else { 
+    //             let p = n - i - 1; 
+    //             let q = n - j - 1; 
+    //             result[i][j] = n * n + 1 - (0.5 * (p + q + 1) * (p + q + 2) + ((p + q) % 2 == 0 ? -p : -q)) - 1; 
+    //         } 
+    //     } 
+    // } 
+
+    // return result;
 }
 
 
